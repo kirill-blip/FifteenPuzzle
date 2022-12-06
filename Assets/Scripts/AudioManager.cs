@@ -11,11 +11,58 @@ namespace FifteenPuzzle
 
         private void Start()
         {
-            if (_firstAudioSource != null)
-                _firstAudioSource.clip = _backgroundClip;
+            Settings.CanPlayMusicChanged += CanPlayMusicChanged;
+            Settings.CanPlaySoundChanged += CanPlaySoundChanged;
+
+            CanPlayMusicChanged();
 
             if (_secondAudioSource != null)
+            {
                 _secondAudioSource.clip = _clickingClip;
+
+                if (Settings.CanPlaySound)
+                {
+                    _secondAudioSource.volume = 1;
+                }
+                else
+                {
+                    _secondAudioSource.volume = 0;
+                }
+            }
+        }
+
+        private void CanPlayMusicChanged()
+        {
+            if (_firstAudioSource != null)
+            {
+                _firstAudioSource.clip = _backgroundClip;
+
+                if (Settings.CanPlayMusic)
+                {
+                    _firstAudioSource.Play();
+                }
+                else
+                {
+                    _firstAudioSource.Stop();
+                }
+            }
+        }
+
+        private void CanPlaySoundChanged()
+        {
+            if (_secondAudioSource != null)
+            {
+                _secondAudioSource.clip = _clickingClip;
+
+                if (Settings.CanPlaySound)
+                {
+                    _secondAudioSource.volume = 1;
+                }
+                else
+                {
+                    _secondAudioSource.volume = 0;
+                }
+            }
         }
 
         public void PlayClickingClip()

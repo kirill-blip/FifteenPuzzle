@@ -39,14 +39,21 @@ namespace FifteenPuzzle
 
         private void GameWon()
         {
+            _shuffleButton.gameObject.SetActive(false);
+            _returnButton.gameObject.SetActive(false);
+
             ActivateObjects();
+        }
+
+        private void ActivateButtons()
+        {
+            _shuffleButton.gameObject.SetActive(true);
+            _returnButton.gameObject.SetActive(true);
         }
 
         private void ActivateObjects()
         {
             _panel.gameObject.SetActive(!_panel.gameObject.activeInHierarchy);
-            _shuffleButton.gameObject.SetActive(!_shuffleButton.gameObject.activeInHierarchy);
-            _returnButton.gameObject.SetActive(!_returnButton.gameObject.activeInHierarchy);
         }
 
         private void ReturnToMenuButtonClicked()
@@ -56,6 +63,7 @@ namespace FifteenPuzzle
 
         private void RestartGameButtonClicked()
         {
+            ActivateButtons();
             RestartGameClickedAction?.Invoke();
         }
     }

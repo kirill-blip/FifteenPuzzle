@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor;
 using UnityEngine;
 
 namespace FifteenPuzzle
@@ -13,14 +12,14 @@ namespace FifteenPuzzle
         [SerializeField] private float _time = .25f;
         [SerializeField] private float _timeToWait = .05f;
 
-        private List<Vector2> directions = new()
+        private List<Vector2> _directions = new()
         {
             Vector2.up,
             Vector2.down,
             Vector2.left,
             Vector2.right
         };
-        private List<Vector3> origins = new()
+        private List<Vector3> _origins = new()
         {
             new Vector3(0, 0.5125f),
             new Vector3(0, -0.5125f),
@@ -47,17 +46,23 @@ namespace FifteenPuzzle
 
         private void OnMouseDown()
         {
-            for (int i = 0; i < directions.Count; i++)
+            Move();
+        }
+
+        private void Move()
+        {
+            for (int i = 0; i < _directions.Count; i++)
             {
-                if (CheckIfCanMove(origins[i], directions[i]))
+                if (CheckIfCanMove(_origins[i], _directions[i]))
                 {
-                    Vector3 position = transform.position + (Vector3)directions[i];
+                    Vector3 position = transform.position + (Vector3)_directions[i];
                     gameObject.LeanMove(position, _time).setEaseOutExpo();
-                    
+
                     StartCoroutine(Wait());
+
+                    return;
                 }
             }
-
         }
 
         private IEnumerator Wait()
@@ -66,12 +71,14 @@ namespace FifteenPuzzle
             Clicked?.Invoke();
         }
 
-        private bool CheckIfCanMove(Vector3 origin, Vector2 direction)
+        public bool CheckIfCanMove(Vector3 origin, Vector2 direction)
         {
             RaycastHit2D raycast = Physics2D.Raycast(transform.position + origin, direction, .5f, _layerMask);
 
             if (raycast.transform == null)
+            {
                 return true;
+            }
 
             return false;
         }

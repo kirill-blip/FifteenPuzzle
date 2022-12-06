@@ -6,7 +6,7 @@ namespace FifteenPuzzle
     public class FieldGenerator : MonoBehaviour
     {
         public int TileCount = 15;
-
+        public LayerMask LayerMask;
         public Transform Parent = null;
         public Tile Tile = null;
         public List<Transform> StartPositions = new();
@@ -33,6 +33,7 @@ namespace FifteenPuzzle
         {
             GenerateField();
             CustomizeTiles();
+
             FieldCreated?.Invoke();
         }
 
