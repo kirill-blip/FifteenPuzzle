@@ -1,76 +1,101 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace FifteenPuzzle
 {
-    public class FieldGenerator : MonoBehaviour
-    {
-        public int TileCount = 15;
-        public LayerMask LayerMask;
-        public Transform Parent = null;
-        public Tile Tile = null;
-        public List<Transform> StartPositions = new();
-        public List<Tile> Tiles = new();
+	public class FieldGenerator : MonoBehaviour
+	{
+		[SerializeField] private Tile _tilePrefab;
+		[SerializeField] private Transform _tilesParent;
+		[SerializeField] private int _tileCount;
+		[SerializeField] private Transform _tilesPositionsParent;
+		[SerializeField] private List<Transform> _tilesPositions;
 
-        private List<Vector2> directions = new()
-        {
-            Vector2.up,
-            Vector2.down,
-            Vector2.left,
-            Vector2.right
-        };
-        private List<Vector3> origins = new()
-        {
-            new Vector3(0, 0.5125f),
-            new Vector3(0, -0.5125f),
-            new Vector3(-0.5125f, 0),
-            new Vector3(0.5125f, 0),
-        };
+		[SerializeField] private List<Tile> _tiles;
 
-        public System.Action FieldCreated;
+		public event EventHandler<List<Tile>> TilesCreated;
 
-        private void Start()
-        {
-            GenerateField();
-            CustomizeTiles();
+		private void Start()
+		{
+			GetPositions();
+			GenerateTiles();
+			RegenerateNumbers();
 
-            FieldCreated?.Invoke();
-        }
+			TilesCreated?.Invoke(this, _tiles);
+		}
 
-        public void GenerateField()
-        {
-            for (int i = 0; i < TileCount; i++)
-            {
-                var tile = Instantiate(Tile);
-                tile.transform.position = StartPositions[i].position;
-                tile.transform.parent = Parent;
-                Tiles.Add(tile);
-            }
-        }
+		public void RegenerateNumbers()
+		{
+			GenerateNumbersOnTiles();
 
-        public void CustomizeTiles()
-        {
-            for (int i = 0; i < Tiles.Count; i++)
-            {
-                Tiles[i].SetNumber(i + 1);
-            }
-        }
+			bool canSolved = CheckIfPuzzleCanBeSolved();
 
-        public void ShuffleTiles()
-        {
-            List<Tile> tiles = new();
+			while (!canSolved)
+			{
+				GenerateNumbersOnTiles();
+				canSolved = CheckIfPuzzleCanBeSolved();
+			}
+		}
 
-            for (int i = 0; i < Tiles.Count; i++)
-            {
-                tiles.Add(Tiles[i]);
-            }
+		private void GenerateNumbersOnTiles()
+		{
+			int[] numbers = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
 
-            tiles.Shuffle();
+			numbers.Shuffle();
 
-            for (int i = 0; i < tiles.Count; i++)
-            {
-                tiles[i].transform.position = StartPositions[i].transform.position;
-            }
-        }
-    }
+			for (int i = 0; i < _tiles.Count; i++)
+			{
+				_tiles[i].SetNumber(numbers[i]);
+			}
+		}
+
+		private void GenerateTiles()
+		{
+			for (int i = 0; i < _tileCount; i++)
+			{
+				Tile tile = Instantiate(_tilePrefab);
+
+				tile.transform.position = _tilesPositions[i].position;
+				tile.transform.parent = _tilesParent;
+
+				_tiles.Add(tile);
+			}
+		}
+
+		private void GetPositions()
+		{
+			foreach (Transform position in _tilesPositionsParent)
+			{
+				_tilesPositions.Add(position);
+			}
+		}
+
+		private bool CheckIfPuzzleCanBeSolved()
+		{
+			int[] n = new int[_tileCount];
+
+			for (int i = 0; i < _tileCount; i++)
+			{
+				int value = _tiles[i].GetNumber();
+				int count = 0;
+
+				for (int j = i + 1; j < _tileCount; j++)
+				{
+					if (_tiles[j].GetNumber() < value)
+					{
+						count++;
+					}
+				}
+
+				n[value - 1] = count;
+			}
+
+			bool isSolvable = (n.Sum() % 2 == 0);
+
+
+			return isSolvable;
+		}
+	}
 }

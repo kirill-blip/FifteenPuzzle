@@ -8,6 +8,7 @@ namespace FifteenPuzzle
     public class Tile : MonoBehaviour
     {
         [SerializeField] private TextMeshPro _numberText = null;
+        [SerializeField] private int _number;
         [SerializeField] private LayerMask _layerMask;
         [SerializeField] private float _time = .25f;
         [SerializeField] private float _timeToWait = .05f;
@@ -32,11 +33,17 @@ namespace FifteenPuzzle
         public void SetNumber(int number)
         {
             _numberText.text = number.ToString();
+            _number = number;
         }
 
         public string GetNumberText()
         {
             return _numberText.text;
+        }
+
+        public int GetNumber()
+        {
+            return _number;
         }
 
         public void CreateNumberText()

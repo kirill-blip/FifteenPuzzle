@@ -10,10 +10,8 @@ namespace FifteenPuzzle
         [SerializeField] private Button _restartGameButton = null;
         [SerializeField] private Button _shuffleButton = null;
         [SerializeField] private Button _returnButton = null;
-        [SerializeField] private Button _informationButton = null;
         
         [SerializeField] private GameObject _panel = null;
-        [SerializeField] private GameObject _informationPanel = null;
 
         public System.Action RestartGameClickedAction;
         public System.Action ShuffleButtonClickedAction;
@@ -30,15 +28,8 @@ namespace FifteenPuzzle
             _restartGameButton.onClick.AddListener(RestartGameButtonClicked);
             _returnButton.onClick.AddListener(ReturnToMenuButtonClicked);
             _shuffleButton.onClick.AddListener(ShuffleButtonClicked);
-            _informationButton.onClick.AddListener(InfromationButtonClicked);
 
             ActivateObjects();
-        }
-
-        private void InfromationButtonClicked()
-        {
-            print("It's works");
-            _informationPanel.gameObject.SetActive(true);
         }
 
         private void ShuffleButtonClicked()
@@ -50,7 +41,6 @@ namespace FifteenPuzzle
         {
             _shuffleButton.gameObject.SetActive(false);
             _returnButton.gameObject.SetActive(false);
-            _informationButton.gameObject.SetActive(false);
 
             ActivateObjects();
         }
@@ -59,7 +49,6 @@ namespace FifteenPuzzle
         {
             _shuffleButton.gameObject.SetActive(true);
             _returnButton.gameObject.SetActive(true);
-            _informationButton.gameObject.SetActive(true);
         }
 
         private void ActivateObjects()
