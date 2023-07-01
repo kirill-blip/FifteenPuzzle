@@ -1,59 +1,77 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace FifteenPuzzle
 {
-    public class SettingsPanel : MonoBehaviour
-    {
-        [SerializeField] private Button _soundButton = null;
-        [SerializeField] private Button _musicButton = null;
-        [SerializeField] private Button _closeButton = null;
+	public class SettingsPanel : MonoBehaviour
+	{
+		[SerializeField] private Button _soundButton = null;
+		[SerializeField] private Button _musicButton = null;
+		[SerializeField] private Button _languageButton = null;
+		[SerializeField] private Button _closeButton = null;
 
+		[SerializeField] private List<Sprite> _soundSprites = null;
+		[SerializeField] private List<Sprite> _musicSprites = null;
 
-        [SerializeField] private List<Sprite> _soundSprites = null;
-        [SerializeField] private List<Sprite> _musicSprites = null;
+		private AudioManager _audioManager = null;
 
-        public System.Action SoundButtonClickedAction;
-        public System.Action MusicButtonClickedAction;
+		public System.Action SoundButtonClickedAction;
+		public System.Action MusicButtonClickedAction;
+		public System.Action LanguageButtonClickedAction;
 
-        private void Start()
-        {
-            if (!Settings.CanPlayMusic)
-            {
-                ChangeSprites(_musicButton.GetComponent<Image>(), _musicSprites);
-            }
+		private void Start()
+		{
+			_audioManager = FindObjectOfType<AudioManager>();
 
-            if (!Settings.CanPlaySound)
-            {
-                ChangeSprites(_soundButton.GetComponent<Image>(), _soundSprites);
-            }
+			if (!Settings.CanPlayMusic)
+			{
+				ChangeSprites(_musicButton.GetComponent<Image>(), _musicSprites);
+			}
 
-            _soundButton.onClick.AddListener(SoundButtonClicked);
-            _musicButton.onClick.AddListener(MusicButtonClicked);
-            _closeButton.onClick.AddListener(CloseButtonClicked);
-        }
+			if (!Settings.CanPlaySound)
+			{
+				ChangeSprites(_soundButton.GetComponent<Image>(), _soundSprites);
+			}
 
-        private void SoundButtonClicked()
-        {
-            ChangeSprites(_soundButton.GetComponent<Image>(), _soundSprites);
-            SoundButtonClickedAction?.Invoke();
-        }
+			_soundButton.onClick.AddListener(() => StartCoroutine(SoundButtonClicked()));
+			_musicButton.onClick.AddListener(() => StartCoroutine(MusicButtonClicked()));
+			_closeButton.onClick.AddListener(() => StartCoroutine(CloseButtonClicked()));
+			_languageButton.onClick.AddListener(() => StartCoroutine(LanguageButtonClicked()));
+		}
 
-        private void MusicButtonClicked()
-        {
-            ChangeSprites(_musicButton.GetComponent<Image>(), _musicSprites);
-            MusicButtonClickedAction?.Invoke();
-        }
+		private IEnumerator LanguageButtonClicked()
+		{
+			yield return _audioManager.PlayButtonSoundClip();
+			LanguageButtonClickedAction?.Invoke();
+		}
 
-        private void ChangeSprites(Image image, List<Sprite> sprites)
-        {
-            image.sprite = image.sprite == sprites[0] ? sprites[1] : sprites[0];
-        }
+		private IEnumerator SoundButtonClicked()
+		{
+			ChangeSprites(_soundButton.GetComponent<Image>(), _soundSprites);
+			SoundButtonClickedAction?.Invoke();
 
-        private void CloseButtonClicked()
-        {
-            gameObject.SetActive(false);
-        }
-    }
+			yield return _audioManager.PlayButtonSoundClip();
+		}
+
+		private IEnumerator MusicButtonClicked()
+		{
+			yield return _audioManager.PlayButtonSoundClip();
+
+			ChangeSprites(_musicButton.GetComponent<Image>(), _musicSprites);
+			MusicButtonClickedAction?.Invoke();
+		}
+
+		private void ChangeSprites(Image image, List<Sprite> sprites)
+		{
+			image.sprite = image.sprite == sprites[0] ? sprites[1] : sprites[0];
+		}
+
+		private IEnumerator CloseButtonClicked()
+		{
+			yield return _audioManager.PlayButtonSoundClip();
+			gameObject.SetActive(false);
+		}
+	}
 }

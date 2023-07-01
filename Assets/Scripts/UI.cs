@@ -1,70 +1,77 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace FifteenPuzzle
 {
-    public class UI : MonoBehaviour
-    {
-        [SerializeField] private Button _returnToMenuButton = null;
-        [SerializeField] private Button _restartGameButton = null;
-        [SerializeField] private Button _shuffleButton = null;
-        [SerializeField] private Button _returnButton = null;
-        
-        [SerializeField] private GameObject _panel = null;
+	public class UI : MonoBehaviour
+	{
+		[SerializeField] private Button _returnToMenuButton = null;
+		[SerializeField] private Button _restartGameButton = null;
+		[SerializeField] private Button _shuffleButton = null;
+		[SerializeField] private Button _returnButton = null;
 
-        public System.Action RestartGameClickedAction;
-        public System.Action ShuffleButtonClickedAction;
+		[SerializeField] private GameObject _panel = null;
 
-        private Game _game = null;
+		public System.Action RestartGameClickedAction;
+		public System.Action ShuffleButtonClickedAction;
 
-        private void Start()
-        {
-            _game = FindObjectOfType<Game>();
-            _game.GameWon += GameWon;
-            _game.GameRestarted += ActivateObjects;
+		private Game _game = null;
+		private AudioManager _audioManager = null;
 
-            _returnToMenuButton.onClick.AddListener(ReturnToMenuButtonClicked);
-            _restartGameButton.onClick.AddListener(RestartGameButtonClicked);
-            _returnButton.onClick.AddListener(ReturnToMenuButtonClicked);
-            _shuffleButton.onClick.AddListener(ShuffleButtonClicked);
+		private void Start()
+		{
+			_game = FindObjectOfType<Game>();
+			_game.GameWon += GameWon;
+			_game.GameRestarted += ActivateObjects;
 
-            ActivateObjects();
-        }
+			_audioManager = FindObjectOfType<AudioManager>();
 
-        private void ShuffleButtonClicked()
-        {
-            ShuffleButtonClickedAction?.Invoke();
-        }
+			_returnToMenuButton.onClick.AddListener(() => StartCoroutine(ReturnToMenuButtonClicked()));
+			_restartGameButton.onClick.AddListener(() => StartCoroutine(RestartGameButtonClicked()));
+			_returnButton.onClick.AddListener(() => StartCoroutine(ReturnToMenuButtonClicked()));
+			_shuffleButton.onClick.AddListener(() => StartCoroutine(ShuffleButtonClicked()));
 
-        private void GameWon()
-        {
-            _shuffleButton.gameObject.SetActive(false);
-            _returnButton.gameObject.SetActive(false);
+			ActivateObjects();
+		}
 
-            ActivateObjects();
-        }
+		private void GameWon()
+		{
+			_shuffleButton.gameObject.SetActive(false);
+			_returnButton.gameObject.SetActive(false);
 
-        private void ActivateButtons()
-        {
-            _shuffleButton.gameObject.SetActive(true);
-            _returnButton.gameObject.SetActive(true);
-        }
+			ActivateObjects();
+		}
 
-        private void ActivateObjects()
-        {
-            _panel.gameObject.SetActive(!_panel.gameObject.activeInHierarchy);
-        }
+		private void ActivateButtons()
+		{
+			_shuffleButton.gameObject.SetActive(true);
+			_returnButton.gameObject.SetActive(true);
+		}
 
-        private void ReturnToMenuButtonClicked()
-        {
-            SceneManager.LoadScene("Menu");
-        }
+		private void ActivateObjects()
+		{
+			_panel.gameObject.SetActive(!_panel.gameObject.activeInHierarchy);
+		}
 
-        private void RestartGameButtonClicked()
-        {
-            ActivateButtons();
-            RestartGameClickedAction?.Invoke();
-        }
-    }
+		private IEnumerator ShuffleButtonClicked()
+		{
+			yield return _audioManager.PlayButtonSoundClip();
+			ShuffleButtonClickedAction?.Invoke();
+		}
+
+		private IEnumerator ReturnToMenuButtonClicked()
+		{
+			yield return _audioManager.PlayButtonSoundClip();
+			SceneManager.LoadScene("Menu");
+		}
+
+		private IEnumerator RestartGameButtonClicked()
+		{
+			yield return _audioManager.PlayButtonSoundClip();
+			ActivateButtons();
+			RestartGameClickedAction?.Invoke();
+		}
+	}
 }

@@ -8,10 +8,12 @@ namespace FifteenPuzzle
 	public class FieldGenerator : MonoBehaviour
 	{
 		[SerializeField] private Tile _tilePrefab;
+
 		[SerializeField] private Transform _tilesParent;
-		[SerializeField] private int _tileCount;
 		[SerializeField] private Transform _tilesPositionsParent;
 		[SerializeField] private List<Transform> _tilesPositions;
+
+		[SerializeField] private int _tileCount;
 
 		[SerializeField] private List<Tile> _tiles;
 
@@ -41,7 +43,12 @@ namespace FifteenPuzzle
 
 		private void GenerateNumbersOnTiles()
 		{
-			int[] numbers = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+			List<int> numbers = new List<int>();
+
+			for (int i = 1; i <= _tileCount; i++)
+			{
+				numbers.Add(i);
+			}
 
 			numbers.Shuffle();
 

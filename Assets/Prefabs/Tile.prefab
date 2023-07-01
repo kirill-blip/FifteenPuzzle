@@ -77,7 +77,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: c8a447602d3e3c74a9e27c97bbd4979a, type: 3}
-  m_Color: {r: 1, g: 0.9882353, b: 0.9019608, a: 1}
+  m_Color: {r: 0.84313726, g: 0.9490196, b: 0.9882353, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -232,7 +232,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 1
+  m_text: 22
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a6a91d5136340e945a474661e56ade33, type: 2}
   m_sharedMaterial: {fileID: -6403853217694905238, guid: a6a91d5136340e945a474661e56ade33, type: 2}
@@ -259,17 +259,17 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 8.85
-  m_fontSizeBase: 36
+  m_fontSize: 6.25
+  m_fontSizeBase: 6.25
   m_fontWeight: 400
-  m_enableAutoSizing: 1
+  m_enableAutoSizing: 0
   m_fontSizeMin: 1
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 32
   m_VerticalAlignment: 4096
   m_textAlignment: 65535
-  m_characterSpacing: 0
+  m_characterSpacing: -10
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
