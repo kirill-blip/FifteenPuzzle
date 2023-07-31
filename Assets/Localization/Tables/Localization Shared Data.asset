@@ -63,6 +63,10 @@ MonoBehaviour:
     m_Key: Menu/Canvas/LevelChoice/LevelText
     m_Metadata:
       m_Items: []
+  - m_Id: 11126761136340992
+    m_Key: Menu/Canvas/Title/GameNameText
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

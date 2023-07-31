@@ -26,6 +26,8 @@
     <div id="unity-warning"> </div>
   </div>
   <script>
+    var yandexSDK = null;
+
     YaGames.init({
       screen: {
         fullscreen: true,
@@ -37,6 +39,7 @@
     }).then(_ysdk => {
       console.log('Yandex SDK initialized');
       window.ysdk = _ysdk;
+      yandexSDK = _ysdk;
       onResize();
     });
 
