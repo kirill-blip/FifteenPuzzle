@@ -67,6 +67,10 @@ MonoBehaviour:
     m_Key: Menu/Canvas/Title/GameNameText
     m_Metadata:
       m_Items: []
+  - m_Id: 20628829247746048
+    m_Key: VKMenu/Canvas/ShareButton/Text (TMP)
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

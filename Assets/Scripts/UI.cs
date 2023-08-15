@@ -64,7 +64,7 @@ namespace FifteenPuzzle
 		private IEnumerator ReturnToMenuButtonClicked()
 		{
 			yield return _audioManager.PlayButtonSoundClip();
-			SceneManager.LoadScene("Menu");
+			SceneManager.LoadScene(0);
 		}
 
 		private IEnumerator RestartGameButtonClicked()

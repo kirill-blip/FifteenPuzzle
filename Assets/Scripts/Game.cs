@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 namespace FifteenPuzzle
@@ -24,7 +25,10 @@ namespace FifteenPuzzle
 		public System.Action GameWon;
 		public System.Action GameRestarted;
 
-		private void Start()
+		[DllImport("__Internal")]
+		private extern static void ShowInterstitialAd();
+
+        private void Start()
 		{
 			_ui = FindObjectOfType<UI>();
 			_audioManager = FindObjectOfType<AudioManager>();
@@ -33,7 +37,9 @@ namespace FifteenPuzzle
 			_ui.ShuffleButtonClickedAction += ShuffleField;
 
 			_fieldGenerator.TilesCreated += TilesCreated;
-		}
+
+			ShowInterstitialAd();
+        }
 
 		private void ShuffleField()
 		{
