@@ -4,9 +4,10 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>Unity WebGL Player | Char_Word</title>
+  <title>Unity WebGL Player | {{{ PRODUCT_NAME }}}</title>
   <link rel="shortcut icon" href="TemplateData/favicon.ico">
   <link rel="stylesheet" href="TemplateData/style.css">
+  
   <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
 </head>
 
@@ -30,7 +31,8 @@
 
     vkBridge.send('VKWebAppShowBannerAd', {
       banner_location: 'bottom',
-      layout_type: 'resize'
+      layout_type: 'resize',
+      can_close: false
     }).then((data) => { 
       if (data.result) {
         // Баннерная реклама отобразилась
@@ -43,15 +45,14 @@
     vkBridge.subscribe((e) => {
       if (e.detail.type === 'VKWebAppViewHide') {
         // Действия при переключении из игры или мини приложения
-        // myUnityInstance.SendMessage('Music', 'StopAllMusic');
-        myUnityInstance.Quit();
+        myUnityInstance.SendMessage('Music', 'StopAllMusic');
       }
     });
 
     vkBridge.subscribe((e) => {
       if (e.detail.type === 'VKWebAppViewRestore') {
         // Действия при восстановлении экрана игры или мини приложения
-        // myUnityInstance.SendMessage('Music', 'StartAllMusic');
+        myUnityInstance.SendMessage('Music', 'StartAllMusic');
       }
     });
 
@@ -118,17 +119,25 @@
     }
 
     var buildUrl = "Build";
-    var loaderUrl = buildUrl + "/Char&Word_WebGL.loader.js";
-    var config = {
-      dataUrl: buildUrl + "/Char&Word_WebGL.data.unityweb",
-      frameworkUrl: buildUrl + "/Char&Word_WebGL.framework.js.unityweb",
-      codeUrl: buildUrl + "/Char&Word_WebGL.wasm.unityweb",
-      streamingAssetsUrl: "StreamingAssets",
-      companyName: "K-Blip Company",
-      productName: "Char_Word",
-      productVersion: "1.0.0",
-      showBanner: unityShowBanner,
-    };
+      var loaderUrl = buildUrl + "/{{{ LOADER_FILENAME }}}";
+      var config = {
+        dataUrl: buildUrl + "/{{{ DATA_FILENAME }}}",
+        frameworkUrl: buildUrl + "/{{{ FRAMEWORK_FILENAME }}}",
+#if USE_WASM
+        codeUrl: buildUrl + "/{{{ CODE_FILENAME }}}",
+#endif
+#if MEMORY_FILENAME
+        memoryUrl: buildUrl + "/{{{ MEMORY_FILENAME }}}",
+#endif
+#if SYMBOLS_FILENAME
+        symbolsUrl: buildUrl + "/{{{ SYMBOLS_FILENAME }}}",
+#endif
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: {{{ JSON.stringify(COMPANY_NAME) }}},
+        productName: {{{ JSON.stringify(PRODUCT_NAME) }}},
+        productVersion: {{{ JSON.stringify(PRODUCT_VERSION) }}},
+        showBanner: unityShowBanner,
+      };
 
     // By default Unity keeps WebGL canvas render target size matched with
     // the DOM size of the canvas element (scaled by window.devicePixelRatio)

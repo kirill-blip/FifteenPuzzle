@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -20,6 +21,7 @@ namespace FifteenPuzzle
             Vector2.left,
             Vector2.right
         };
+        [SerializeField]
         private List<Vector3> _origins = new()
         {
             new Vector3(0, 0.5125f),
@@ -88,6 +90,18 @@ namespace FifteenPuzzle
             }
 
             return false;
+        }
+
+        public void SetOrirgins(List<Vector3> origins)
+        {
+            _origins.Clear();
+            origins.ForEach(x => _origins.Add(x));
+        }
+
+        public void SetDirections(List<Vector3> directions)
+        {
+            _directions.Clear();
+            directions.ForEach(x => _directions.Add(x));
         }
     }
 }

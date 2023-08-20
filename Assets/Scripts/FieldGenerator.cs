@@ -8,6 +8,7 @@ namespace FifteenPuzzle
 	public class FieldGenerator : MonoBehaviour
 	{
 		[SerializeField] private Tile _tilePrefab;
+		[SerializeField] private Vector3 _tileSize;
 
 		[SerializeField] private Transform _tilesParent;
 		[SerializeField] private Transform _tilesPositionsParent;
@@ -16,6 +17,8 @@ namespace FifteenPuzzle
 		[SerializeField] private int _tileCount;
 
 		[SerializeField] private List<Tile> _tiles;
+		[SerializeField] private List<Vector3> _origins;
+		[SerializeField] private List<Vector3> _directions;
 
 		public event EventHandler<List<Tile>> TilesCreated;
 
@@ -28,8 +31,11 @@ namespace FifteenPuzzle
 			TilesCreated?.Invoke(this, _tiles);
 		}
 
-		public void RegenerateNumbers()
+		public void RegenerateNumbers(bool moveToDefaultPosition = false)
 		{
+			if (moveToDefaultPosition)
+				MoveToDefaultPosition();
+
 			GenerateNumbersOnTiles();
 
 			bool canSolved = CheckIfPuzzleCanBeSolved();
@@ -41,7 +47,15 @@ namespace FifteenPuzzle
 			}
 		}
 
-		private void GenerateNumbersOnTiles()
+        private void MoveToDefaultPosition()
+        {
+			for (int i = 0; i < _tiles.Count; i++)
+			{
+				_tiles[i].transform.position = _tilesPositions[i].position;
+			}
+        }
+
+        private void GenerateNumbersOnTiles()
 		{
 			List<int> numbers = new List<int>();
 
@@ -63,6 +77,10 @@ namespace FifteenPuzzle
 			for (int i = 0; i < _tileCount; i++)
 			{
 				Tile tile = Instantiate(_tilePrefab);
+
+				tile.transform.localScale = _tileSize;
+				tile.SetOrirgins(_origins);
+				tile.SetDirections(_directions);
 
 				tile.transform.position = _tilesPositions[i].position;
 				tile.transform.parent = _tilesParent;

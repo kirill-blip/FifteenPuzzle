@@ -71,6 +71,14 @@ MonoBehaviour:
     m_Key: VKMenu/Canvas/ShareButton/Text (TMP)
     m_Metadata:
       m_Items: []
+  - m_Id: 21338326123524096
+    m_Key: VKMenu/Canvas/ResultPanel/TitleText (TMP)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 21338732958429184
+    m_Key: VKMenu/Canvas/ResultButton/Text (TMP)
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
