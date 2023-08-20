@@ -76,6 +76,14 @@ MonoBehaviour:
     m_Localized: Share
     m_Metadata:
       m_Items: []
+  - m_Id: 21338326123524096
+    m_Localized: Progress
+    m_Metadata:
+      m_Items: []
+  - m_Id: 21338732958429184
+    m_Localized: Progress
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

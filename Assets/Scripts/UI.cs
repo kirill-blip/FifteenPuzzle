@@ -1,4 +1,5 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -11,6 +12,11 @@ namespace FifteenPuzzle
 		[SerializeField] private Button _restartGameButton = null;
 		[SerializeField] private Button _shuffleButton = null;
 		[SerializeField] private Button _returnButton = null;
+
+		[SerializeField] private GameObject _movePanel;
+		[SerializeField] private TextMeshProUGUI _numberOfMoveText;
+		[SerializeField] private TextMeshProUGUI _numberOfMoveTextEndPanel;
+
 
 		[SerializeField] private GameObject _panel = null;
 
@@ -25,6 +31,7 @@ namespace FifteenPuzzle
 			_game = FindObjectOfType<Game>();
 			_game.GameWon += GameWon;
 			_game.GameRestarted += ActivateObjects;
+            _game.OnNumberOfMovesChanged += OnNumberOfMovesChanged;
 
 			_audioManager = FindObjectOfType<AudioManager>();
 
@@ -36,11 +43,18 @@ namespace FifteenPuzzle
 			ActivateObjects();
 		}
 
-		private void GameWon()
+        private void OnNumberOfMovesChanged(object sender, int e)
+        {
+			_numberOfMoveText.text = e.ToString();
+        }
+
+        private void GameWon()
 		{
 			_shuffleButton.gameObject.SetActive(false);
 			_returnButton.gameObject.SetActive(false);
+			_movePanel.gameObject.SetActive(false);
 
+			_numberOfMoveTextEndPanel.text = _game.GetNumberOfMoves().ToString();
 			ActivateObjects();
 		}
 
@@ -48,6 +62,8 @@ namespace FifteenPuzzle
 		{
 			_shuffleButton.gameObject.SetActive(true);
 			_returnButton.gameObject.SetActive(true);
+			_movePanel.gameObject.SetActive(true);
+			_numberOfMoveText.text = "0";
 		}
 
 		private void ActivateObjects()

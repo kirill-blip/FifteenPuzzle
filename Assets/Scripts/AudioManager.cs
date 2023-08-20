@@ -18,6 +18,8 @@ namespace FifteenPuzzle
 
 		private bool _isWorking = false;
 
+		private bool _canPlay = true;
+
 		private void Start()
 		{
 			Settings.CanPlayMusicChanged += CanPlayMusicChanged;
@@ -29,7 +31,7 @@ namespace FifteenPuzzle
 
 		private void Update()
 		{
-			if (_canPlayBackgroundMusic && !_musicAudioSource.isPlaying && !_isWorking)
+			if (_canPlay && _canPlayBackgroundMusic && !_musicAudioSource.isPlaying && !_isWorking)
 			{
 				StartCoroutine(PlayBackgroundMusic());
 			}
@@ -87,5 +89,17 @@ namespace FifteenPuzzle
 			_soundAudioSource.PlayOneShot(_buttonSound);
 			yield return new WaitForSeconds(_buttonSound.length);
 		}
-	}
+
+        public void StopMusic()
+        {
+			_canPlay = false;
+			_musicAudioSource.Stop();
+        }
+
+        public void StartMusic()
+        {
+			_musicAudioSource.Play();
+			_canPlay = true;
+        }
+    }
 }
