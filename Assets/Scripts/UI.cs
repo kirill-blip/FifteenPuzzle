@@ -16,7 +16,8 @@ namespace FifteenPuzzle
 		[SerializeField] private GameObject _movePanel;
 		[SerializeField] private TextMeshProUGUI _numberOfMoveText;
 		[SerializeField] private TextMeshProUGUI _numberOfMoveTextEndPanel;
-
+		[SerializeField] private TextMeshProUGUI _timerText;
+		[SerializeField] private GameObject _timerObject;
 
 		[SerializeField] private GameObject _panel = null;
 
@@ -32,6 +33,8 @@ namespace FifteenPuzzle
 			_game.GameWon += GameWon;
 			_game.GameRestarted += ActivateObjects;
             _game.OnNumberOfMovesChanged += OnNumberOfMovesChanged;
+            _game.OnTimerStopped += OnTimerStopped;
+            _game.OnTimeChanged += OnTimeChanged;
 
 			_audioManager = FindObjectOfType<AudioManager>();
 
@@ -42,6 +45,19 @@ namespace FifteenPuzzle
 
 			ActivateObjects();
 		}
+
+        private void OnTimeChanged(object sender, int time)
+        {
+			if (!_timerObject.gameObject.activeInHierarchy)
+				_timerObject.gameObject.SetActive(true);
+
+			_timerText.text = time.ToString();
+        }
+
+        private void OnTimerStopped(object sender, System.EventArgs e)
+        {
+            _timerObject.gameObject.SetActive(false);
+        }
 
         private void OnNumberOfMovesChanged(object sender, int e)
         {

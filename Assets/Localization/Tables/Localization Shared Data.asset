@@ -79,6 +79,10 @@ MonoBehaviour:
     m_Key: VKMenu/Canvas/ResultButton/Text (TMP)
     m_Metadata:
       m_Items: []
+  - m_Id: 22810080574550016
+    m_Key: 4x4/Canvas/Timer/Text (TMP)
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
