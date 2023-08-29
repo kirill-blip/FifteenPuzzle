@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -26,16 +27,24 @@ namespace FifteenPuzzle
         private Results _results = null;
         private UI _ui = null;
 
-        public System.Action GameWon;
-        public System.Action GameRestarted;
-        public event System.EventHandler<int> OnNumberOfMovesChanged;
+        private bool _isTimer;
+        private float _time = 5;
+        [SerializeField] private float _timeToWaitAd = 25;
+
+        public Action GameWon;
+        public Action GameRestarted;
+        public event EventHandler<int> OnNumberOfMovesChanged;
+        public event EventHandler<int> OnTimeChanged;
+        public event EventHandler OnTimerStopped;
 
         [DllImport("__Internal")]
         private static extern void ShowInterstitialAd();
 
         [DllImport("__Internal")]
-        private static extern void SaveData(string key, string value);
+        private static extern void CheckNativeAdsInerstitial();
 
+        [DllImport("__Internal")]
+        private static extern void SaveData(string key, string value);
 
         private void Start()
         {
@@ -47,8 +56,47 @@ namespace FifteenPuzzle
             _ui.ShuffleButtonClickedAction += ShuffleField;
 
             _fieldGenerator.TilesCreated += TilesCreated;
+        }
 
-            ShowInterstitialAd();
+        private IEnumerator CheckAds()
+        {
+            while (true)
+            {
+                yield return new WaitForSeconds(5f);
+
+                CheckNativeAdsInerstitial();
+            }
+        }
+
+        private IEnumerator ShowAds()
+        {
+            while (true)
+            {
+                yield return new WaitForSeconds(_timeToWaitAd);
+
+                _isTimer = true;
+
+                Debug.Log("Timer started");
+
+                yield return new WaitForSeconds(5f);
+
+                Debug.Log("Ads is showing");
+
+                ShowInterstitialAd();
+
+                OnTimerStopped?.Invoke(this, null);
+                _isTimer = false;
+                _time = 5;
+            }
+        }
+
+        private void Update()
+        {
+            if (_isTimer)
+            {
+                _time -= Time.deltaTime;
+                OnTimeChanged?.Invoke(this, (int)_time);
+            }
         }
 
         private void ShuffleField()
@@ -132,7 +180,7 @@ namespace FifteenPuzzle
             yield return new WaitForSeconds(_timeToWait);
 
             int numbersOfMoves = _results.GetResult(SceneManager.GetActiveScene().name);
-            
+
             if (numbersOfMoves == 0 || numbersOfMoves > _numberOfMoves)
             {
                 SaveData(SceneManager.GetActiveScene().name, _numberOfMoves.ToString());
@@ -146,6 +194,19 @@ namespace FifteenPuzzle
         public int GetNumberOfMoves()
         {
             return _numberOfMoves;
+        }
+
+        public void StopAds()
+        {
+            _isTimer = false;
+            _time = 5;
+            OnTimerStopped?.Invoke(this, null);
+            StopCoroutine(ShowAds());
+        }
+
+        public void StartAds()
+        {
+            StartCoroutine(ShowAds());
         }
     }
 }

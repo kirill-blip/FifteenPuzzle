@@ -84,6 +84,10 @@ MonoBehaviour:
     m_Localized: Progress
     m_Metadata:
       m_Items: []
+  - m_Id: 22810080574550016
+    m_Localized: 'Advertising through:'
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
